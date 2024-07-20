@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LBP</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <a href="index.html"><h1 class="logo">Calculate</h1></a>
+        <nav class="navigation">
+            <a href="USD.html">USD</a>
+    </header>
+    <h1 class="title">LBP</h1>
+    <div class="container">
+        <h1>50:30:20 Budget Calculator</h1>
+        <div id="incomeEntries">
+            <input type="number" min="1000" placeholder="Enter your daily income">
+        </div>
+        <button onclick="calculateBudget()">Calculate</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculateBudget() {
+            const incomeEntries = document.querySelectorAll('#incomeEntries input');
+            let totalIncome = 0;
+            let validEntries = 0;
+
+            incomeEntries.forEach(entry => {
+                const income = parseFloat(entry.value);
+                if (!isNaN(income) && income >= 1000) {
+                    totalIncome += income;
+                    validEntries++;
+                } else if (!isNaN(income) && income < 1000) {
+                    entry.setCustomValidity("Income must be at least 1000.");
+                    entry.reportValidity();
+                } else {
+                    entry.setCustomValidity("");
+                }
+            });
+
+            if (validEntries > 0) {
+                const averageDailyIncome = totalIncome / validEntries;
+                const needs = averageDailyIncome * 0.50;
+                const wants = averageDailyIncome * 0.30;
+                const savings = averageDailyIncome * 0.20;
+
+                document.getElementById('result').innerHTML = `
+                    <p>Needs (50%): ${needs.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                    <p>Wants (30%): ${wants.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                    <p>Savings (20%): ${savings.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                `;
+            } else {
+                Swal.fire({
+                    title: 'Invalid Input',
+                    text: 'Income must be at least 1000.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>
